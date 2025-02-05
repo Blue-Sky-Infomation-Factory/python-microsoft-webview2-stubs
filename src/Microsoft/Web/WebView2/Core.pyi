@@ -3,7 +3,8 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.core
 """
 
 from enum import Enum
-from System import Uri
+from typing import Any, Final, Tuple
+from System import EventArgs
 
 class CoreWebView2PermissionState(Enum):
 	# Specifies that the default browser behavior is used, which normally prompts users for decision.
@@ -36,40 +37,80 @@ class CoreWebView2NavigationKind(Enum):
 	# which can be caused by CoreWebView2.Navigate(), window.location.href = ..., or other WebView2 or DOM APIs that navigate to a new URI.
 	NewDocument = 2
 
-class CoreWebView2InitializationCompletedEventArgs:
-	@property
-	def IsSuccess(self) -> bool: ...
-	@property
-	def InitializationException (self) -> object: ...
+class CoreWebView2WebErrorStatus(Enum):
+	# Indicates that an unknown error occurred.
+	Unknown = 0
+	# Indicates that the SSL certificate common name does not match the web address.
+	CertificateCommonNameIsIncorrect = 1
 
-class CoreWebView2NavigationStartingEventArgs:
+	# Indicates that the SSL certificate has expired.
+	CertificateExpired = 2
+	# Indicates that the SSL client certificate contains errors.
+	ClientCertificateContainsErrors = 3
+	# Indicates that the SSL certificate has been revoked.
+	CertificateRevoked = 4
+	# Indicates that the SSL certificate is not valid.
+	# The certificate may not match the public key pins for the host name,
+	# the certificate is signed by an untrusted authority or using a weak sign algorithm,
+	# the certificate claimed DNS names violate name constraints,
+	# the certificate contains a weak key, the validity period of the certificate is too long,
+	# lack of revocation information or revocation mechanism, non-unique host name, lack of certificate transparency information,
+	# or the certificate is chained to a legacy Symantec root.
+	CertificateIsInvalid = 5
+	# Indicates that the host is unreachable.
+	ServerUnreachable = 6
+	# Indicates that the connection has timed out.
+	Timeout = 7
+	# Indicates that the server returned an invalid or unrecognized response.
+	ErrorHttpInvalidServerResponse = 8
+	# Indicates that the connection was stopped.
+	ConnectionAborted = 9
+	# Indicates that the connection was reset.
+	ConnectionReset = 10
+	# Indicates that the Internet connection has been lost.
+	Disconnected = 11
+	# Indicates that a connection to the destination was not established.
+	CannotConnect = 12
+	# Indicates that the provided host name was not able to be resolved.
+	HostNameNotResolved = 13
+	# Indicates that the operation was canceled.
+	# This status code is also used in the following cases:
+	# 1) when the app cancels a navigation via NavigationStarting event.
+	# 2) For original navigation if the app navigates the WebView2 in a rapid succession away after the load for original navigation commenced, but before it completed.
+	OperationCanceled = 14
+	# Indicates that the request redirect failed.
+	RedirectFailed = 15
+	# Indicates that an unexpected error occurred.
+	UnexpectedError = 16
+	# Indicates that user is prompted with a login, waiting on user action.
+	# Initial navigation to a login site will always return this even if app provides credential using BasicAuthenticationRequested.
+	# HTTP response status code in this case is 401. See status code reference here: https://developer.mozilla.org/docs/Web/HTTP/Status.
+	ValidAuthenticationCredentialsRequired = 17
+	# Indicates that user lacks proper authentication credentials for a proxy server.
+	# HTTP response status code in this case is 407. See status code reference here: https://developer.mozilla.org/docs/Web/HTTP/Status.
+	ValidProxyAuthenticationRequired = 18
+
+class CoreWebView2InitializationCompletedEventArgs(EventArgs):
+	IsSuccess: Final[bool]
+	InitializationException: Final[object]
+
+class CoreWebView2NavigationStartingEventArgs(EventArgs):
 	AdditionalAllowedFrameAncestors: str
 	Cancel: bool
-	@property
-	def IsRedirected(self) -> bool: ...
-	@property
-	def IsUserInitiated(self) -> bool: ...
-	@property
-	def NavigationId(self) -> int: ...
-	@property
-	def NavigationKind(self) -> CoreWebView2NavigationKind: ...
-	@property
-	def RequestHeaders(self) -> object: ...
-	@property
-	def Uri(self) -> str: ...
+	IsRedirected: Final[bool]
+	IsUserInitiated: Final[bool]
+	NavigationId: Final[int]
+	NavigationKind: Final[CoreWebView2NavigationKind]
+	RequestHeaders: Final[object]
+	Uri: Final[str]
 
-class CoreWebView2NavigationCompletedEventArgs:
-	AdditionalAllowedFrameAncestors: str
-	Cancel: bool
-	@property
-	def IsRedirected(self) -> bool: ...
-	@property
-	def IsUserInitiated(self) -> bool: ...
-	@property
-	def NavigationId(self) -> int: ...
-	@property
-	def NavigationKind(self) -> CoreWebView2NavigationKind: ...
-	@property
-	def RequestHeaders(self) -> object: ...
-	@property
-	def Uri(self) -> Uri: ...
+class CoreWebView2NavigationCompletedEventArgs(EventArgs):
+	HttpStatusCode: Final[int]
+	IsSuccess: Final[bool]
+	NavigationId: Final[int]
+	WebErrorStatus: Final[CoreWebView2WebErrorStatus]
+
+class CoreWebView2WebMessageReceivedEventArgs(EventArgs):
+	AdditionalObjects: Final[Tuple[Any]]
+	Source: Final[str]
+	WebMessageAsJson: Final[str]

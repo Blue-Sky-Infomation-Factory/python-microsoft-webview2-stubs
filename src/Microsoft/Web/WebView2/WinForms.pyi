@@ -2,12 +2,18 @@
 https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.winforms
 """
 
-from typing import Optional, Self
+from typing import Final, Optional, Self
 
-from System import EventHandler
-from Microsoft.Web.WebView2.Core import CoreWebView2InitializationCompletedEventArgs, CoreWebView2NavigationStartingEventArgs
+from System import CSharpObject, EventHandler
+from System.Windows.Forms import Control
+from Microsoft.Web.WebView2.Core import (
+	CoreWebView2InitializationCompletedEventArgs,
+	CoreWebView2NavigationStartingEventArgs,
+	CoreWebView2NavigationCompletedEventArgs,
+	CoreWebView2WebMessageReceivedEventArgs
+)
 
-class CoreWebView2CreationProperties:
+class CoreWebView2CreationProperties(CSharpObject):
 	AdditionalBrowserArguments: str
 	BrowserExecutableFolder: str
 	IsInPrivateModeEnabled: bool
@@ -15,32 +21,22 @@ class CoreWebView2CreationProperties:
 	ProfileName: str
 	UserDataFolder: str
 
-class WebView2:
-	@property
-	def AllowDrop(self) -> bool: ...
+class WebView2(Control):
+	AllowDrop: Final[bool]
 	AllowExternalDrop: bool
-	@property
-	def CanGoBack(self) -> bool: ...
-	@property
-	def CanGoForward(self) -> bool: ...
-	@property
-	def ContextMenu(self) -> object: ...
-	@property
-	def ContextMenuStrip(self) -> object: ...
-	@property
-	def CoreWebView2(self) -> Optional[object]: ...
-	@property
-	def CreateParams(self) -> object: ...
+	CanGoBack: Final[bool]
+	CanGoForward: Final[bool]
+	ContextMenu: Final[object]
+	ContextMenuStrip: Final[object]
+	CoreWebView2: Final[ Optional[object]]
 	CreationProperties: Optional[CoreWebView2CreationProperties]
 	DefaultBackgroundColor: object
-	@property
-	def Font(self) -> object: ...
+	Font: Final[object]
 	Source: object
-	@property
-	def Text(self) -> str: ...
+	Text: Final[str]
 	ZoomFactor: float
 
-	def Dispose(self, disposing: bool) -> None: ...
-
 	CoreWebView2InitializationCompleted: EventHandler[Self, CoreWebView2InitializationCompletedEventArgs]
-	NavigationStarting:  EventHandler[Self, CoreWebView2NavigationStartingEventArgs]
+	NavigationCompleted: EventHandler[Self, CoreWebView2NavigationCompletedEventArgs]
+	NavigationStarting: EventHandler[Self, CoreWebView2NavigationStartingEventArgs]
+	WebMessageReceived: EventHandler[Self, CoreWebView2WebMessageReceivedEventArgs]
