@@ -3,8 +3,8 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.winforms
 """
 
 from typing import Final, Optional, Self
-
-from System import CSharpObject, EventHandler
+from .Core import CoreWebView2
+from System import CSharpObject, EventHandler, Uri
 from System.Windows.Forms import Control
 from Microsoft.Web.WebView2.Core import (
 	CoreWebView2InitializationCompletedEventArgs,
@@ -28,11 +28,11 @@ class WebView2(Control):
 	CanGoForward: Final[bool]
 	ContextMenu: Final[object]
 	ContextMenuStrip: Final[object]
-	CoreWebView2: Final[ Optional[object]]
+	CoreWebView2: Final[Optional[CoreWebView2]]
 	CreationProperties: Optional[CoreWebView2CreationProperties]
 	DefaultBackgroundColor: object
 	Font: Final[object]
-	Source: object
+	Source: Uri
 	Text: Final[str]
 	ZoomFactor: float
 

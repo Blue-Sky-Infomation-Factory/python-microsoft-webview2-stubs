@@ -3,8 +3,9 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.core
 """
 
 from enum import Enum
-from typing import Any, Final, Tuple
-from System import EventArgs
+from typing import Any, Final, List, Optional, Tuple, overload
+from System import CSharpObject, EventArgs
+from System.Threading.Tasks import Tasks
 
 class CoreWebView2PermissionState(Enum):
 	# Specifies that the default browser behavior is used, which normally prompts users for decision.
@@ -42,7 +43,6 @@ class CoreWebView2WebErrorStatus(Enum):
 	Unknown = 0
 	# Indicates that the SSL certificate common name does not match the web address.
 	CertificateCommonNameIsIncorrect = 1
-
 	# Indicates that the SSL certificate has expired.
 	CertificateExpired = 2
 	# Indicates that the SSL client certificate contains errors.
@@ -114,3 +114,10 @@ class CoreWebView2WebMessageReceivedEventArgs(EventArgs):
 	AdditionalObjects: Final[Tuple[Any]]
 	Source: Final[str]
 	WebMessageAsJson: Final[str]
+
+class CoreWebView2(CSharpObject):
+	@overload
+	def PostWebMessageAsJson(self, messageJson: str) -> None: ...
+	@overload
+	def PostWebMessageAsJson(self, messageJson: str, additional_objects: List[object]) -> None: ...
+	def ExecuteScriptAsync(script: str) -> Tasks: ...
