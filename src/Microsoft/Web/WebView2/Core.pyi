@@ -3,7 +3,7 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.core
 """
 
 from enum import Enum
-from typing import Any, Final, List, Optional, Tuple, overload
+from typing import Any, Final, List, Tuple, overload
 from System import CSharpObject, EventArgs
 from System.Threading.Tasks import Tasks
 
@@ -90,32 +90,41 @@ class CoreWebView2WebErrorStatus(Enum):
 	# HTTP response status code in this case is 407. See status code reference here: https://developer.mozilla.org/docs/Web/HTTP/Status.
 	ValidProxyAuthenticationRequired = 18
 
+class CoreWebView2HttpRequestHeaders(CSharpObject):
+	# incomplete
+	pass
+
 class CoreWebView2InitializationCompletedEventArgs(EventArgs):
-	IsSuccess: Final[bool]
-	InitializationException: Final[object]
+	def __init__(self):
+		self.IsSuccess: Final[bool]
+		self.InitializationException: Final[object]
 
 class CoreWebView2NavigationStartingEventArgs(EventArgs):
-	AdditionalAllowedFrameAncestors: str
-	Cancel: bool
-	IsRedirected: Final[bool]
-	IsUserInitiated: Final[bool]
-	NavigationId: Final[int]
-	NavigationKind: Final[CoreWebView2NavigationKind]
-	RequestHeaders: Final[object]
-	Uri: Final[str]
+	def __init__(self):
+		self.AdditionalAllowedFrameAncestors: str
+		self.Cancel: bool
+		self.IsRedirected: Final[bool]
+		self.IsUserInitiated: Final[bool]
+		self.NavigationId: Final[int]
+		self.NavigationKind: Final[CoreWebView2NavigationKind]
+		self.RequestHeaders: Final[CoreWebView2HttpRequestHeaders]
+		self.Uri: Final[str]
 
 class CoreWebView2NavigationCompletedEventArgs(EventArgs):
-	HttpStatusCode: Final[int]
-	IsSuccess: Final[bool]
-	NavigationId: Final[int]
-	WebErrorStatus: Final[CoreWebView2WebErrorStatus]
+	def __init__(self):
+		self.HttpStatusCode: Final[int]
+		self.IsSuccess: Final[bool]
+		self.NavigationId: Final[int]
+		self.WebErrorStatus: Final[CoreWebView2WebErrorStatus]
 
 class CoreWebView2WebMessageReceivedEventArgs(EventArgs):
-	AdditionalObjects: Final[Tuple[Any]]
-	Source: Final[str]
-	WebMessageAsJson: Final[str]
+	def __init__(self):
+		self.AdditionalObjects: Final[Tuple[Any]]
+		self.Source: Final[str]
+		self.WebMessageAsJson: Final[str]
 
 class CoreWebView2(CSharpObject):
+	# incomplete
 	@overload
 	def PostWebMessageAsJson(self, messageJson: str) -> None: ...
 	@overload

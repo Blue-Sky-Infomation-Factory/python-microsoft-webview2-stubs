@@ -14,27 +14,30 @@ from Microsoft.Web.WebView2.Core import (
 )
 
 class CoreWebView2CreationProperties(CSharpObject):
-	AdditionalBrowserArguments: str
-	BrowserExecutableFolder: str
-	IsInPrivateModeEnabled: bool
-	Language: str
-	ProfileName: str
-	UserDataFolder: str
+	def __init__(self):
+		self.AdditionalBrowserArguments: str
+		self.BrowserExecutableFolder: str
+		self.IsInPrivateModeEnabled: bool
+		self.Language: str
+		self.ProfileName: str
+		self.UserDataFolder: str
 
 class WebView2(Control):
-	AllowDrop: Final[bool]
-	AllowExternalDrop: bool
-	CanGoBack: Final[bool]
-	CanGoForward: Final[bool]
-	ContextMenu: Final[object]
-	ContextMenuStrip: Final[object]
-	CoreWebView2: Final[Optional[CoreWebView2]]
-	CreationProperties: Optional[CoreWebView2CreationProperties]
-	DefaultBackgroundColor: object
-	Font: Final[object]
-	Source: Uri
-	Text: Final[str]
-	ZoomFactor: float
+	# incomplete
+	def __init__(self):
+		self.AllowDrop: Final[bool]
+		self.AllowExternalDrop: bool
+		self.CanGoBack: Final[bool]
+		self.CanGoForward: Final[bool]
+		self.ContextMenu: Final[object]
+		self.ContextMenuStrip: Final[object]
+		self.CoreWebView2: Final[Optional[CoreWebView2]]
+		self.CreationProperties: Optional[CoreWebView2CreationProperties]
+		self.DefaultBackgroundColor: object
+		self.Font: Final[object]
+		self.Source: Uri
+		self.Text: Final[str]
+		self.ZoomFactor: float
 
 	CoreWebView2InitializationCompleted: EventHandler[Self, CoreWebView2InitializationCompletedEventArgs]
 	NavigationCompleted: EventHandler[Self, CoreWebView2NavigationCompletedEventArgs]
