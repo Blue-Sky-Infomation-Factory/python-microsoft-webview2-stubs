@@ -3,9 +3,9 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.core
 """
 
 from enum import Enum
-from typing import Any, Final, List, Tuple, overload
-from System import CSharpObject, EventArgs
-from System.Threading.Tasks import Tasks
+from typing import Any, Final, List, Self, Tuple, overload
+from System import CSharpObject, EventArgs, EventHandler
+from System.Threading.Tasks import Task
 
 class CoreWebView2PermissionState(Enum):
 	# Specifies that the default browser behavior is used, which normally prompts users for decision.
@@ -90,6 +90,18 @@ class CoreWebView2WebErrorStatus(Enum):
 	# HTTP response status code in this case is 407. See status code reference here: https://developer.mozilla.org/docs/Web/HTTP/Status.
 	ValidProxyAuthenticationRequired = 18
 
+class CoreWebView2FrameKind(Enum):
+	# Indicates that the frame is an unknown type frame. We may extend this enum type to identify more frame kinds in the future.
+	Unknown = 0
+	# Indicates that the frame is a primary main frame(webview).
+	MainFrame = 1
+	# Indicates that the frame is an iframe.
+	Iframe = 2
+	# Indicates that the frame is an embed element.
+	Embed = 3
+	# Indicates that the frame is an object element.
+	Object = 4
+
 class CoreWebView2HttpRequestHeaders(CSharpObject):
 	# incomplete
 	pass
@@ -123,10 +135,103 @@ class CoreWebView2WebMessageReceivedEventArgs(EventArgs):
 		self.Source: Final[str]
 		self.WebMessageAsJson: Final[str]
 
+class CoreWebView2FrameInfo(CSharpObject):
+	def __init__(self):
+		self.FrameId: Final[int]
+		self.FrameKind: Final[CoreWebView2FrameKind]
+		self.Name: Final[str]
+		self.ParentFrameInfo: Final[CoreWebView2FrameInfo]
+		self.Source: Final [str]
+
+class CoreWebView2WindowFeatures(CSharpObject):
+	def __init__(self):
+		self.HasPosition: Final[bool]
+		self.HasSize: Final[bool]
+		self.Height: Final[int]
+		self.Left: Final[int]
+		self.ShouldDisplayMenuBar: Final[bool]
+		self.ShouldDisplayScrollBars: Final[bool]
+		self.ShouldDisplayStatus: Final[bool]
+		self.houldDisplayToolbar: Final[bool]
+		self.Top: Final[int]
+		self.Width: Final[int]
+
+class CoreWebView2Deferral(CSharpObject):
+	def Complete(self) -> None: ...
+	@overload
+	def Dispose (self) -> None: ...
+	@overload
+	def Dispose (self, disposing: bool) -> None: ...
+
+class CoreWebView2NewWindowRequestedEventArgs(EventArgs):
+	def __init__(self):
+		self.Handled: bool
+		self.IsUserInitiated: Final[bool]
+		self.Name: Final[str]
+		self.NewWindow: CoreWebView2
+		self.OriginalSourceFrameInfo: Final[CoreWebView2FrameInfo]
+		self.Uri: Final [str]
+		self.WindowFeatures: Final[CoreWebView2WindowFeatures]
+	def GetDeferral(self) -> CoreWebView2Deferral: ...
+
+class CoreWebView2PermissionKind(Enum):
+	UnknownPermission = 0
+	Microphone = 1
+	Camera = 2
+	Geolocation = 3
+	Notifications = 4
+	OtherSensors = 5
+	ClipboardRead = 6
+	MultipleAutomaticDownloads = 7
+	FileReadWrite = 8
+	Autoplay = 9
+	LocalFonts = 10
+	MidiSystemExclusiveMessages = 11
+	WindowManagement = 12
+
+class CoreWebView2PermissionRequestedEventArgs(EventArgs):
+	def __init__(self):
+		self.Handled: bool
+		self.IsUserInitiated: Final[bool]
+		self.PermissionKind: Final[CoreWebView2PermissionKind]
+		self.SavesInProfile: bool
+		self.State: CoreWebView2PermissionState
+		self.Uri: Final [str]
+	def GetDeferral(self) -> CoreWebView2Deferral: ...
+
+class CoreWebView2Settings(CSharpObject):
+	def __init__(self):
+		self.AreBrowserAcceleratorKeysEnabled: bool
+		self.AreDefaultContextMenusEnabled: bool
+		self.AreDefaultScriptDialogsEnabled: bool
+		self.AreDevToolsEnabled: bool
+		self.AreHostObjectsAllowed: bool
+		self.HiddenPdfToolbarItems: bool
+		self.IsBuiltInErrorPageEnabled: bool
+		self.IsGeneralAutofillEnabled: bool
+		self.IsNonClientRegionSupportEnabled: bool
+		self.IsPasswordAutosaveEnabled: bool
+		self.IsPinchZoomEnabled: bool
+		self.IsReputationCheckingRequired: bool
+		self.IsScriptEnabled: bool
+		self.IsStatusBarEnabled: bool
+		self.IsSwipeNavigationEnabled: bool
+		self.IsWebMessageEnabled: bool
+		self.IsZoomControlEnabled: bool
+		self.UserAgent: str
+
 class CoreWebView2(CSharpObject):
 	# incomplete
+	def __init__(self):
+		self.NewWindowRequested: EventHandler[Self, CoreWebView2NewWindowRequestedEventArgs]
+		self.PermissionRequested: EventHandler[Self, CoreWebView2PermissionRequestedEventArgs]
+		self.Settings: Final[CoreWebView2Settings]
+	def AddScriptToExecuteOnDocumentCreatedAsync(self, javaScript: str) -> Task[str]: ...
+	def AddHostObjectToScript(self, name: str, rawObject: object) -> None: ...
 	@overload
 	def PostWebMessageAsJson(self, messageJson: str) -> None: ...
 	@overload
 	def PostWebMessageAsJson(self, messageJson: str, additional_objects: List[object]) -> None: ...
-	def ExecuteScriptAsync(script: str) -> Tasks: ...
+	def ExecuteScriptAsync(self, script: str) -> Task: ...
+	def SetVirtualHostNameToFolderMapping(self, host_name: str, folder_path: str, aceess_kind: CoreWebView2HostResourceAccessKind) -> None: ...
+	def OpenDevToolsWindow(self) -> None: ...
