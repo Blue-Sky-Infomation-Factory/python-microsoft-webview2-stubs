@@ -4,7 +4,7 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.winforms
 
 from typing import Final, Optional, Self
 from .Core import CoreWebView2
-from System import CSharpObject, EventHandler, Uri
+from System import Object, EventHandler, Uri
 from System.Windows.Forms import Control
 from Microsoft.Web.WebView2.Core import (
 	CoreWebView2InitializationCompletedEventArgs,
@@ -13,7 +13,7 @@ from Microsoft.Web.WebView2.Core import (
 	CoreWebView2WebMessageReceivedEventArgs
 )
 
-class CoreWebView2CreationProperties(CSharpObject):
+class CoreWebView2CreationProperties(Object):
 	def __init__(self):
 		self.AdditionalBrowserArguments: str
 		self.BrowserExecutableFolder: str

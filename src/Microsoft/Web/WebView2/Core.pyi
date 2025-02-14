@@ -4,7 +4,7 @@ https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.web.webview2.core
 
 from enum import Enum
 from typing import Any, Final, List, Self, Tuple, overload
-from System import CSharpObject, EventArgs, EventHandler
+from System import Object, EventArgs, EventHandler, Exception
 from System.Threading.Tasks import Task
 
 class CoreWebView2PermissionState(Enum):
@@ -102,14 +102,14 @@ class CoreWebView2FrameKind(Enum):
 	# Indicates that the frame is an object element.
 	Object = 4
 
-class CoreWebView2HttpRequestHeaders(CSharpObject):
+class CoreWebView2HttpRequestHeaders(Object):
 	# incomplete
 	pass
 
 class CoreWebView2InitializationCompletedEventArgs(EventArgs):
 	def __init__(self):
 		self.IsSuccess: Final[bool]
-		self.InitializationException: Final[object]
+		self.InitializationException: Final[Exception]
 
 class CoreWebView2NavigationStartingEventArgs(EventArgs):
 	def __init__(self):
@@ -135,7 +135,7 @@ class CoreWebView2WebMessageReceivedEventArgs(EventArgs):
 		self.Source: Final[str]
 		self.WebMessageAsJson: Final[str]
 
-class CoreWebView2FrameInfo(CSharpObject):
+class CoreWebView2FrameInfo(Object):
 	def __init__(self):
 		self.FrameId: Final[int]
 		self.FrameKind: Final[CoreWebView2FrameKind]
@@ -143,7 +143,7 @@ class CoreWebView2FrameInfo(CSharpObject):
 		self.ParentFrameInfo: Final[CoreWebView2FrameInfo]
 		self.Source: Final [str]
 
-class CoreWebView2WindowFeatures(CSharpObject):
+class CoreWebView2WindowFeatures(Object):
 	def __init__(self):
 		self.HasPosition: Final[bool]
 		self.HasSize: Final[bool]
@@ -156,7 +156,7 @@ class CoreWebView2WindowFeatures(CSharpObject):
 		self.Top: Final[int]
 		self.Width: Final[int]
 
-class CoreWebView2Deferral(CSharpObject):
+class CoreWebView2Deferral(Object):
 	def Complete(self) -> None: ...
 	@overload
 	def Dispose (self) -> None: ...
@@ -199,7 +199,7 @@ class CoreWebView2PermissionRequestedEventArgs(EventArgs):
 		self.Uri: Final [str]
 	def GetDeferral(self) -> CoreWebView2Deferral: ...
 
-class CoreWebView2Settings(CSharpObject):
+class CoreWebView2Settings(Object):
 	def __init__(self):
 		self.AreBrowserAcceleratorKeysEnabled: bool
 		self.AreDefaultContextMenusEnabled: bool
@@ -220,7 +220,7 @@ class CoreWebView2Settings(CSharpObject):
 		self.IsZoomControlEnabled: bool
 		self.UserAgent: str
 
-class CoreWebView2(CSharpObject):
+class CoreWebView2(Object):
 	# incomplete
 	def __init__(self):
 		self.NewWindowRequested: EventHandler[Self, CoreWebView2NewWindowRequestedEventArgs]
